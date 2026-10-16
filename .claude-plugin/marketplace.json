@@ -1,0 +1,12 @@
+{
+    "name": "claude-skim",
+    "owner": { "name": "ttqteo" },
+    "description": "skim, a Claude Code mod that highlights what you need to read in a long reply.",
+    "plugins": [
+        {
+            "name": "skim",
+            "source": "./plugins/skim",
+            "description": "Highlights the few sentences of a long reply you actually need to read, and dims the rest."
+        }
+    ]
+}
