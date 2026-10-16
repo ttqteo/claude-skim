@@ -9,6 +9,8 @@ highlights first and only go through the full text when you need to.
 The marks never leave your screen. The mod strips them before the reply is saved, so copies, the transcript
 file and Claude's next turn all see plain text.
 
+![A long explanation with three sentences highlighted and the rest dimmed](docs/skim-on.png)
+
 ## Install
 
 ```
@@ -22,16 +24,27 @@ Tested on Claude Code 2.1.287 and newer.
 
 - Long explanations come out dimmed except for the highlighted sentences.
 - Short replies are left alone.
-- In a brainstorming turn Claude highlights only the question it is waiting on you to answer, and the reply
-  stays at full brightness so you still read the options.
-- In fullscreen mode, if that question has scrolled out of view, a line above the prompt repeats it.
 - `/skim` turns the dimming off for the session (you'll see "skim off" in the status area). Run it again to
   turn it back on. Highlights still show either way.
+
+  ![The same reply after /skim: full brightness, highlights kept](docs/skim-off.png)
+
+- When Claude is brainstorming with you, only the question it is waiting on gets highlighted, and nothing is
+  dimmed, so you still read all the options.
+
+  ![A brainstorm reply where only the closing question is highlighted](docs/brainstorm.png)
+
+- In fullscreen mode, if that question has scrolled out of view, a line above the prompt repeats it.
 
 ## How it works
 
 The mod adds one short, fixed section to the system prompt asking Claude to wrap must-read sentences in
 `==double equals==`. It is about 170 tokens, and since the text never changes it stays in the prompt cache.
+
+On some organization accounts (a Team plan, for one), Claude Code's built-in security plugin keeps user plugins out of the system
+prompt. When that happens skim sends the same instructions alongside your prompt instead, hidden from the
+transcript: the full text with your first message, then a one-line reminder (about 40 tokens) with each
+message after that.
 
 When a reply comes in, the mod pulls the marks out, keeps them aside (keyed by a hash of the cleaned text, so a
 resumed session still draws them), and stores the reply without them. The terminal view draws the marked
