@@ -44,11 +44,11 @@ Tested on Claude Code 2.1.287 and newer.
 ## How it works
 
 The mod adds one short, fixed section to the system prompt asking Claude to wrap must-read sentences in
-`==double equals==`. It is about 270 tokens, and since the text never changes it stays in the prompt cache.
+`==double equals==`. It is about 370 tokens, and since the text never changes it stays in the prompt cache.
 
 On some organization accounts (a Team plan, for one), Claude Code's built-in security plugin keeps user plugins out of the system
 prompt. When that happens skim sends the same instructions alongside your prompt instead, hidden from the
-transcript: the full text with your first message, then a one-line reminder (about 50 tokens) with each
+transcript: the full text with your first message, then a one-line reminder (about 80 tokens) with each
 message after that.
 
 When a reply comes in, the mod pulls the marks out, keeps them aside (keyed by a hash of the cleaned text, so a
@@ -57,6 +57,35 @@ sentences on a tinted background. Every mark is drawn, but when the marks cover 
 nothing is dimmed, since dimming around a highlight that big hides almost nothing.
 
 Headless runs (`claude -p`) are not asked to mark anything.
+
+## Rough numbers
+
+Measured on 2026-10-20 on an Apple M1 with Node 20, against Claude Opus 5.5. These are ballpark figures from a
+few runs, not a careful benchmark.
+
+**Tokens.** The system prompt section costs 368 input tokens and the per-message reminder 77. I measured both as
+the difference in input tokens between `claude -p` calls with and without the text appended, and two rounds gave
+the same numbers. The section is fixed text, so after the first turn it is read from the prompt cache. The
+reminder only applies on accounts that keep the section out of the system prompt, and it adds those 77 tokens to
+each message you send.
+
+**CPU.** Time the mod's code spends per reply, on synthetic markdown replies with three marks (median of 7
+runs). Saving runs once per reply and includes trimming a full store of 500 kept replies. Drawing runs each
+time the terminal redraws the reply.
+
+| Reply length | Saving | Drawing |
+|---|---|---|
+| 1,600 chars | ~16 µs | ~55 µs |
+| 5,200 chars | ~23 µs | ~89 µs |
+| 20,000 chars | ~56 µs | ~166 µs |
+
+**How much you read.** These are the 124 replies skim had kept from my own sessions. 65 were brainstorm turns,
+where only the closing question is highlighted and nothing is dimmed. In the other 59, the explanations, the
+median reply was 1,328 characters with one mark, and none had more than four. The highlighted text was a median
+of 13% of the reply (mean 18%, 90th percentile 37%). Six of the 59 were marked past a third of their length
+and drew undimmed.
+
+`bench/bench.mjs` reproduces the CPU and reading figures. Its header shows how to run it.
 
 ## Notes
 
