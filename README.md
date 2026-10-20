@@ -24,6 +24,11 @@ Tested on Claude Code 2.1.287 and newer.
 
 - Long explanations come out dimmed except for the highlighted sentences.
 - Short replies are left alone.
+- A command Claude wants you to type is written as `! <command>` and highlighted along with the marked
+  sentences. Claude also marks the sentence that says what it does, above all what it closes, deletes or
+  overwrites.
+- Ask Claude to highlight a markdown file and it writes the `==…==` marks into that file instead of printing
+  the file in its reply.
 - `/skim` turns the dimming off for the session (you'll see "skim off" in the status area). Run it again to
   turn it back on. Highlights still show either way.
 
@@ -39,17 +44,17 @@ Tested on Claude Code 2.1.287 and newer.
 ## How it works
 
 The mod adds one short, fixed section to the system prompt asking Claude to wrap must-read sentences in
-`==double equals==`. It is about 170 tokens, and since the text never changes it stays in the prompt cache.
+`==double equals==`. It is about 270 tokens, and since the text never changes it stays in the prompt cache.
 
 On some organization accounts (a Team plan, for one), Claude Code's built-in security plugin keeps user plugins out of the system
 prompt. When that happens skim sends the same instructions alongside your prompt instead, hidden from the
-transcript: the full text with your first message, then a one-line reminder (about 40 tokens) with each
+transcript: the full text with your first message, then a one-line reminder (about 50 tokens) with each
 message after that.
 
 When a reply comes in, the mod pulls the marks out, keeps them aside (keyed by a hash of the cleaned text, so a
 resumed session still draws them), and stores the reply without them. The terminal view draws the marked
-sentences on a tinted background. There is a cap of 4 marks per reply; past that, or if a mark is very long,
-it falls back to plain text, since highlighting everything shows nothing.
+sentences on a tinted background. Every mark is drawn, but when the marks cover more than a third of a reply
+nothing is dimmed, since dimming around a highlight that big hides almost nothing.
 
 Headless runs (`claude -p`) are not asked to mark anything.
 
