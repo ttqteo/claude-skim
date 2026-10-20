@@ -44,7 +44,7 @@ Tested on Claude Code 2.1.287 and newer.
 ## How it works
 
 The mod adds one short, fixed section to the system prompt asking Claude to wrap must-read sentences in
-`==double equals==`. It is about 370 tokens, and since the text never changes it stays in the prompt cache.
+`==double equals==`. It is about 390 tokens, and since the text never changes it stays in the prompt cache.
 
 On some organization accounts (a Team plan, for one), Claude Code's built-in security plugin keeps user plugins out of the system
 prompt. When that happens skim sends the same instructions alongside your prompt instead, hidden from the
@@ -63,10 +63,10 @@ Headless runs (`claude -p`) are not asked to mark anything.
 Measured on 2026-10-20 on an Apple M1 with Node 20, against Claude Opus 5.5. These are ballpark figures from a
 few runs, not a careful benchmark.
 
-**Tokens.** The system prompt section costs 368 input tokens and the per-message reminder 77. I measured both as
-the difference in input tokens between `claude -p` calls with and without the text appended, and two rounds gave
-the same numbers. The section is fixed text, so after the first turn it is read from the prompt cache. The
-reminder only applies on accounts that keep the section out of the system prompt, and it adds those 77 tokens to
+**Tokens.** As of 0.2.1 the system prompt section costs 388 input tokens and the per-message reminder 89. I
+measured both as the difference in input tokens between `claude -p` calls with and without the text appended, and
+two rounds gave the same numbers. The section is fixed text, so after the first turn it is read from the prompt cache. The
+reminder only applies on accounts that keep the section out of the system prompt, and it adds those 89 tokens to
 each message you send.
 
 **CPU.** Time the mod's code spends per reply, on synthetic markdown replies with three marks (median of 7
@@ -94,10 +94,9 @@ and drew undimmed.
 - Mods run inside Claude Code with your permissions. This one makes no network calls and runs no commands;
   the code is short, so read it before installing: `plugins/skim/hooks/`.
 
-## Where the code lives
+## Contributing
 
-skim started inside arcterm, my cockpit for running coding agents, and it is still developed there. This repo
-is the published copy. Issues and pull requests are welcome here and I'll carry them back.
+Issues and pull requests are welcome. `claude plugin test plugins/skim` runs the tests.
 
 ## License
 
