@@ -1,5 +1,6 @@
 // skim: highlights the sentences of a reply worth reading (highlight-core.ts). claude marks them, the mod strips the
-// marks before the reply is stored and draws them in the terminal alone, dimming the rest of an explanation.import { atom, read, update } from "claude-code";
+// marks before the reply is stored and draws them in the terminal alone, dimming the rest of an explanation.
+import { atom, read, update } from "claude-code";
 import type { EngineInterface, Register } from "claude-code";
 import type { Ask } from "../types";
 import {
