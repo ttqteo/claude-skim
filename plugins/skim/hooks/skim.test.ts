@@ -1,5 +1,5 @@
 import { expect, test } from "claude-code/testing";
-import { layout, parseMarks } from "./highlight-core";
+import { keepWithStored, layout, parseMarks } from "./highlight-core";
 
 // the marked texts a reply draws highlighted
 function drawn(reply: string): string[] {
@@ -15,4 +15,21 @@ test("a mark in a table row leaves the marks after it drawn", async () => {
 
 test("marks outside tables draw in order", async () => {
     expect(drawn("==First point.== Then more.\n\n- ==A listed point.== tail")).toEqual(["First point.", "A listed point."]);
+});
+
+test("a reply's marks are added to the store as read now, keeping another session's", async () => {
+    const kept: [string, string[]][] = [["h1", ["a"]]];
+    const stored = [
+        ["h1", ["a"]],
+        ["other", ["theirs"]],
+    ];
+    expect(keepWithStored(stored, kept, [["h2", ["b"]]])).toEqual([
+        ["h1", ["a"]],
+        ["other", ["theirs"]],
+        ["h2", ["b"]],
+    ]);
+    expect(keepWithStored(undefined, kept, [["h2", ["b"]]])).toEqual([
+        ["h1", ["a"]],
+        ["h2", ["b"]],
+    ]);
 });
